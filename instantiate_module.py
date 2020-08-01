@@ -42,7 +42,7 @@ for index,value in enumerate(list_interface):
         list_wrap.append("");
 
     #"[]" wire width
-    temp = re.findall(r"\[(.*?)\]", value);
+    temp = re.findall(r"(\[.*?\])", value);
     if (len(temp) != 0):
         list_wire.append(temp[0]);
     else:
@@ -51,18 +51,28 @@ for index,value in enumerate(list_interface):
     list_interface[index] = re.findall(r"[\s]*(\S*?)$", value)[0];
 
 # print
-int_max_len=0;
+str_output = "";
+int_max_len = 0;
 
 for value in list_interface:
     if (len(value) > int_max_len):
         int_max_len = len(value);
 
 print ("实例化结果：");
-str_out = str_module_name + " " + str_module_name + " (" + "\n";
+for index,value in enumerate(list_interface):
+    if (len(list_wire[index]) == 0):
+        str_temp = "wire" + "\t\t\t" + value + "\n";
+    else:
+        str_temp = "wire" + "\t" + list_wire[index] + "\t" + value + "\n";
+    str_output = str_output + str_temp;
+
+str_output = str_output + "\n" + str_module_name + " " + str_module_name + " (" + "\n";
+
 for index,value in enumerate(list_interface):
     str_temp = list_wrap[index] + "\t." + value.ljust(int_max_len) + "\t(" + value + ")," + "\n";
-    str_temp = str_temp.expandtabs(4);
-    str_out = str_out + str_temp;
-str_out = str_out[:-2] + "\n" + ");";
+    str_output = str_output + str_temp;
 
-print (str_out);
+str_output = str_output[:-2] + "\n" + ");";
+str_output = str_output.expandtabs(4);
+
+print (str_output);
